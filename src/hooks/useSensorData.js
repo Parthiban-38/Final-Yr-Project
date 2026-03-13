@@ -17,6 +17,8 @@ export default function useSensorData() {
       if (snapshot.exists()) {
         setData(snapshot.val());
         setConnected(true);
+      } else {
+        setConnected(false);
       }
     });
 
@@ -29,18 +31,42 @@ export default function useSensorData() {
       const raw = snapshot.val();
       if (!raw) return;
 
-      const formatted = Object.keys(raw).map((timestamp) => ({
-        time: Number(timestamp),
-        temperature: raw[timestamp].temperature,
-        humidity: raw[timestamp].humidity,
-        soil_percentage: raw[timestamp].soil_percentage,
-        rssi: raw[timestamp].rssi
-      }));
+      const formatted = Object.keys(raw)
+  .map((timestamp) => {
 
-      // sort by timestamp
+    let timeValue;
+
+    if (!isNaN(timestamp) && timestamp.length >= 10) {
+      timeValue = Number(timestamp) * 1000;
+    }
+    else if (timestamp.includes("_")) {
+
+      const clean = timestamp
+        .replace("_", " ")
+        .replace(/-/g, ":")
+        .replace(": ", " ");
+
+      timeValue = new Date(clean).getTime();
+    }
+    else {
+      return null;
+    }
+
+    return {
+      time: timeValue,
+      temperature: raw[timestamp].temperature,
+      humidity: raw[timestamp].humidity,
+      soil_percentage: raw[timestamp].soil_percentage,
+      rssi: raw[timestamp].rssi
+    };
+
+  })
+  .filter(Boolean);
+
+      // SORT BY TIME
       formatted.sort((a, b) => a.time - b.time);
 
-      // keep last 24 points
+      // KEEP LAST 24 RECORDS
       setHistory(formatted.slice(-24));
 
     });

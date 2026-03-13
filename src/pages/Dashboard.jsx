@@ -50,28 +50,28 @@ export default function Dashboard() {
         <SensorCard
           icon={<Thermometer size={30}/>}
           title="Temperature"
-          value={`${data.temperature || 0} °C`}
+          value={`${data?.temperature ?? 0} °C`}
           color="#ff7043"
         />
 
         <SensorCard
           icon={<Droplets size={30}/>}
           title="Humidity"
-          value={`${data.humidity || 0} %`}
+          value={`${data?.humidity ?? 0} %`}
           color="#42a5f5"
         />
 
         <SensorCard
           icon={<Sprout size={30}/>}
           title="Soil Moisture"
-          value={`${data.soil_percentage || 0} %`}
+          value={`${data?.soil_percentage ?? 0} %`}
           color="#66bb6a"
         />
 
         <SensorCard
           icon={<Signal size={30}/>}
           title="LoRa Signal"
-          value={`${data.rssi || "--"} dBm`}
+          value={`${data?.rssi ?? "--"} dBm`}
           color="#ab47bc"
         />
 
@@ -89,7 +89,7 @@ export default function Dashboard() {
           📊 Sensor History
         </h2>
 
-        <SensorChart data={history}/>
+        <SensorChart data={history} />
 
       </div>
 

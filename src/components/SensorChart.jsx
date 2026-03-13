@@ -1,56 +1,77 @@
+import React from "react";
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
-  CartesianGrid
+  Legend
 } from "recharts";
 
 export default function SensorChart({ data }) {
 
+  if (!data || data.length === 0) {
+    return <p>No sensor history available</p>;
+  }
+
+ const formattedData = data
+  .filter(item => item.time)
+  .map((item) => {
+
+    const date = new Date(Number(item.time));
+
+    if (isNaN(date.getTime())) return null;
+
+    return {
+      ...item,
+      timeLabel: date.toLocaleString()
+    };
+
+  })
+  .filter(Boolean)
+  .sort((a, b) => a.time - b.time);
+
   return (
 
     <ResponsiveContainer width="100%" height={350}>
-      <LineChart data={data}>
+
+      <LineChart data={formattedData}>
 
         <CartesianGrid strokeDasharray="3 3" />
 
-        <XAxis
-          dataKey="time"
-          tickFormatter={(t) =>
-            new Date(t * 1000).toLocaleTimeString()
-          }
-        />
+        <XAxis dataKey="timeLabel" />
 
         <YAxis />
 
-        <Tooltip
-          labelFormatter={(t) =>
-            new Date(t * 1000).toLocaleString()
-          }
-        />
+        <Tooltip />
+
+        <Legend />
 
         <Line
           type="monotone"
           dataKey="temperature"
           stroke="#ff7043"
+          strokeWidth={3}
         />
 
         <Line
           type="monotone"
           dataKey="humidity"
           stroke="#42a5f5"
+          strokeWidth={3}
         />
 
         <Line
           type="monotone"
           dataKey="soil_percentage"
           stroke="#66bb6a"
+          strokeWidth={3}
         />
 
       </LineChart>
+
     </ResponsiveContainer>
 
   );
