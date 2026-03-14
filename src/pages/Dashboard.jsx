@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Thermometer, Droplets, Sprout, Signal } from "lucide-react";
 import SensorChart from "../components/SensorChart";
@@ -7,6 +7,45 @@ import useSensorData from "../hooks/useSensorData";
 export default function Dashboard() {
 
   const { data, history, connected } = useSensorData();
+
+  // Tamil voice recommendation
+  function speakRecommendation(message) {
+    const speech = new SpeechSynthesisUtterance(message);
+    speech.lang = "ta-IN";
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+  }
+
+  // Sensor condition voice alerts
+  useEffect(() => {
+
+    if (data.soil_percentage < 20) {
+
+      speakRecommendation(
+        "மண் மிகவும் உலர்ந்துள்ளது. தயவு செய்து வயலில் தண்ணீர் பாசனம் செய்யுங்கள்."
+      );
+
+    }
+
+    else if (data.temperature > 35) {
+
+      speakRecommendation(
+        "வெப்பநிலை அதிகமாக உள்ளது. பயிர்களுக்கு வெப்ப அழுத்தம் ஏற்பட வாய்ப்பு உள்ளது."
+      );
+
+    }
+
+    else if (data.humidity < 30) {
+
+      speakRecommendation(
+        "காற்றில் ஈரப்பதம் குறைவாக உள்ளது. பாசனம் பரிந்துரைக்கப்படுகிறது."
+      );
+
+    }
+
+  }, [data]);
 
   return (
 
@@ -31,9 +70,9 @@ export default function Dashboard() {
         <div style={{fontSize:"18px"}}>
           Status:
           {connected ? (
-            <span style={{color:"green",marginLeft:"10px"}}>● Connected</span>
+            <span style={{color:"green",marginLeft:"10px"}}> ● Connected</span>
           ) : (
-            <span style={{color:"red",marginLeft:"10px"}}>● Offline</span>
+            <span style={{color:"red",marginLeft:"10px"}}> ● Offline</span>
           )}
         </div>
 
@@ -50,28 +89,28 @@ export default function Dashboard() {
         <SensorCard
           icon={<Thermometer size={30}/>}
           title="Temperature"
-          value={`${data?.temperature ?? 0} °C`}
+          value={`${data.temperature || 0} °C`}
           color="#ff7043"
         />
 
         <SensorCard
           icon={<Droplets size={30}/>}
           title="Humidity"
-          value={`${data?.humidity ?? 0} %`}
+          value={`${data.humidity || 0} %`}
           color="#42a5f5"
         />
 
         <SensorCard
           icon={<Sprout size={30}/>}
           title="Soil Moisture"
-          value={`${data?.soil_percentage ?? 0} %`}
+          value={`${data.soil_percentage || 0} %`}
           color="#66bb6a"
         />
 
         <SensorCard
           icon={<Signal size={30}/>}
           title="LoRa Signal"
-          value={`${data?.rssi ?? "--"} dBm`}
+          value={`${data.rssi || "--"} dBm`}
           color="#ab47bc"
         />
 
@@ -89,7 +128,7 @@ export default function Dashboard() {
           📊 Sensor History
         </h2>
 
-        <SensorChart data={history} />
+        <SensorChart data={history}/>
 
       </div>
 
