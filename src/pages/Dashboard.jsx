@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-import React from "react";
-=======
+
 import React, { useEffect } from "react";
 >>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
 import { motion } from "framer-motion";
@@ -12,8 +10,6 @@ export default function Dashboard() {
 
   const { data, history, connected } = useSensorData();
 
-<<<<<<< HEAD
-=======
   // Tamil voice recommendation
   function speakRecommendation(message) {
     const speech = new SpeechSynthesisUtterance(message);
@@ -53,7 +49,6 @@ export default function Dashboard() {
 
   }, [data]);
 
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
   return (
 
     <div style={{
@@ -62,7 +57,7 @@ export default function Dashboard() {
       padding: "30px"
     }}>
 
-      {/* HEADER */}
+      
       <div style={{
         display:"flex",
         justifyContent:"space-between",
@@ -77,15 +72,15 @@ export default function Dashboard() {
         <div style={{fontSize:"18px"}}>
           Status:
           {connected ? (
-<<<<<<< HEAD
+
             <span style={{color:"green",marginLeft:"10px"}}>● Connected</span>
           ) : (
             <span style={{color:"red",marginLeft:"10px"}}>● Offline</span>
-=======
+
             <span style={{color:"green",marginLeft:"10px"}}> ● Connected</span>
           ) : (
             <span style={{color:"red",marginLeft:"10px"}}> ● Offline</span>
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
           )}
         </div>
 
@@ -102,44 +97,44 @@ export default function Dashboard() {
         <SensorCard
           icon={<Thermometer size={30}/>}
           title="Temperature"
-<<<<<<< HEAD
+
           value={`${data?.temperature ?? 0} °C`}
-=======
+
           value={`${data.temperature || 0} °C`}
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
           color="#ff7043"
         />
 
         <SensorCard
           icon={<Droplets size={30}/>}
           title="Humidity"
-<<<<<<< HEAD
+
           value={`${data?.humidity ?? 0} %`}
-=======
+
           value={`${data.humidity || 0} %`}
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
           color="#42a5f5"
         />
 
         <SensorCard
           icon={<Sprout size={30}/>}
           title="Soil Moisture"
-<<<<<<< HEAD
+
           value={`${data?.soil_percentage ?? 0} %`}
-=======
+
           value={`${data.soil_percentage || 0} %`}
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
           color="#66bb6a"
         />
 
         <SensorCard
           icon={<Signal size={30}/>}
           title="LoRa Signal"
-<<<<<<< HEAD
+
           value={`${data?.rssi ?? "--"} dBm`}
-=======
+
           value={`${data.rssi || "--"} dBm`}
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
           color="#ab47bc"
         />
 
@@ -157,11 +152,11 @@ export default function Dashboard() {
           📊 Sensor History
         </h2>
 
-<<<<<<< HEAD
+
         <SensorChart data={history} />
-=======
+
         <SensorChart data={history}/>
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
 
       </div>
 
@@ -203,8 +198,8 @@ function SensorCard({ icon, title, value, color }) {
     </motion.div>
 
   );
-<<<<<<< HEAD
+
 }
-=======
+
 }
->>>>>>> e86e56f42c169b2597d3bd832dd3017fffe31ba2
+
