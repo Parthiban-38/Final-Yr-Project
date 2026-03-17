@@ -1,21 +1,28 @@
 import { useState } from "react";
 
-export default function Navbar({ connected, onLanguageChange }) {
+export default function Navbar({ connected }) {
 
   const [lang, setLang] = useState("en");
 
-  const toggleLanguage = () => {
+  const changeLanguage = (lang) => {
+    const interval = setInterval(() => {
+      const select = document.querySelector(".goog-te-combo");
 
+      if (select) {
+        select.value = lang;
+        select.dispatchEvent(new Event("change"));
+        clearInterval(interval);
+      }
+    }, 300);
+  };
+
+  const toggleLanguage = () => {
     const newLang = lang === "en" ? "ta" : "en";
     setLang(newLang);
-
-    if (onLanguageChange) {
-      onLanguageChange(newLang);
-    }
+    changeLanguage(newLang);
   };
 
   return (
-
     <nav
       style={{
         background: "#020617",
@@ -26,16 +33,16 @@ export default function Navbar({ connected, onLanguageChange }) {
         alignItems: "center"
       }}
     >
-
       <h2>🌱 Smart Agriculture Dashboard</h2>
 
       <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
-
+        
         <span>
           Status:
           {connected ? " 🟢 Connected" : " 🔴 Offline"}
         </span>
 
+        {/* ✅ Toggle Button */}
         <button
           onClick={toggleLanguage}
           style={{
@@ -43,15 +50,14 @@ export default function Navbar({ connected, onLanguageChange }) {
             background: "#16a34a",
             border: "none",
             borderRadius: "6px",
-            color: "white"
+            color: "white",
+            cursor: "pointer"
           }}
         >
           {lang === "en" ? "தமிழ்" : "English"}
         </button>
 
       </div>
-
     </nav>
-
   );
 }
