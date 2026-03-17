@@ -8,7 +8,7 @@ const cropData = {
   },
   wheat: {
     fertilizer: "Nitrogen rich fertilizer recommended",
-    irrigation: "Irrigate at CRI and flowering stage",
+    irrigation: "Irrigate at CRI and flowering stage",h
     tips: "Avoid over irrigation"
   },
   tomato: {

@@ -1,10 +1,15 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Recommender from "./pages/Recommender";
 
 function App() {
   return (
-    <div>
-      <Dashboard />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/recommender" element={<Recommender />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
