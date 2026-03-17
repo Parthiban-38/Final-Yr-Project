@@ -15,3 +15,16 @@ h1,h2,h3,h4{
 button{
   cursor:pointer;
 }
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+#google_translate_element {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
