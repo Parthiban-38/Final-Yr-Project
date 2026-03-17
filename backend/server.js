@@ -8,8 +8,8 @@ app.use(cors());
 app.use(express.json());
 
 const client = twilio(
-  "TWILIO_ACCOUNT_SID",
-  "TWILIO_AUTH_TOKEN"
+  "AC433c0707775e5bb4134b44426a87cd3f",
+  "0a74a54f7bebccd8d812985c447a1b5c"
 );
 
 app.post("/sendSMS", async (req, res) => {
@@ -18,8 +18,8 @@ app.post("/sendSMS", async (req, res) => {
 
   await client.messages.create({
     body: message,
-    from: "+123456789",
-    to: "+91XXXXXXXXXX"
+    from: "+12292976849",
+    to: "+919047114805"
   });
 
   res.send("SMS Sent");
