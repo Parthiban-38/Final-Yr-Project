@@ -8,8 +8,8 @@ app.use(cors());
 app.use(express.json());
 
 const client = twilio(
-  "SID",
-  "twwilio"
+  "AC433c0707775e5bb4134b44426a87cd3f",
+  "0a74a54f7bebccd8d812985c447a1b5c"
 );
 
 app.post("/sendSMS", async (req, res) => {

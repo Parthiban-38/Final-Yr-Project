@@ -4,25 +4,95 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smart-agri-dashboard</title>
+    <title>Smart Agri Dashboard</title>
+
+    <!-- ✅ Set default language (English) using cookie -->
+    <script>
+      (function () {
+        var lang = (document.cookie.match(/(^|;\s*)googtrans=\/en\/(\w+)/) || [])[2];
+        if (lang) {
+          var newCookie = "/en/" + lang;
+          document.cookie = "googtrans=" + newCookie + ";path=/";
+          document.cookie =
+            "googtrans=" + newCookie + ";path=/;domain=" + location.hostname;
+        }
+      })();
+    </script>
   </head>
+
   <body>
+    <!-- 🌐 Translate Dropdown -->
     <div id="google_translate_element"></div>
 
-<script>
-  function googleTranslateElementInit() {
-    new window.google.translate.TranslateElement(
-      {
-        pageLanguage: 'en',
-        includedLanguages: 'en,ta',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      },
-      'google_translate_element'
-    );
-  }
-</script>
+    <!-- ✅ Google Translate Init -->
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en", // default English
+            includedLanguages: "en,ta", // English + Tamil
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+          },
+          "google_translate_element"
+        );
+      }
+    </script>
 
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <!-- ✅ Google Script -->
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- ✅ Save selected language -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const observer = new MutationObserver(() => {
+          const iframe = document.querySelector("iframe.goog-te-menu-frame");
+
+          if (iframe) {
+            try {
+              const items = iframe.contentDocument.querySelectorAll(
+                ".goog-te-menu2-item span.text"
+              );
+
+              items.forEach((span) => {
+                span.addEventListener("click", function () {
+                  const lang = span.innerText.toLowerCase().includes("tamil")
+                    ? "ta"
+                    : "en";
+
+                  const val = "/en/" + lang;
+
+                  document.cookie = "googtrans=" + val + ";path=/";
+                  document.cookie =
+                    "googtrans=" +
+                    val +
+                    ";path=/;domain=" +
+                    location.hostname;
+                });
+              });
+            } catch (err) {
+              console.warn("Translate frame error", err);
+            }
+          }
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      });
+    </script>
+
+    <!-- 🔥 Force remove Google top bar -->
+    <script>
+      function removeTranslateBar() {
+        const bar = document.querySelector(".goog-te-banner-frame");
+        if (bar) bar.style.display = "none";
+        document.body.style.top = "0px";
+      }
+      setInterval(removeTranslateBar, 500);
+    </script>
+
+    <!-- ⚛️ React App -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
