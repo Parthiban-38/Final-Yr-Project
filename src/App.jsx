@@ -1,12 +1,13 @@
 import { BrowserRouter } from "react-router-dom";
 import { useEffect } from "react";
 import AppRoutes from "./routes";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   useEffect(() => {
     const removeGoogleBanner = () => {
       const iframe = document.querySelector(".goog-te-banner-frame");
-
+      <Route path="/recommender" element={<Recommender />} />
       if (iframe) {
         iframe.style.display = "none";
       }
@@ -18,9 +19,11 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <AuthProvider>   {/* ✅ IMPORTANT */}
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
