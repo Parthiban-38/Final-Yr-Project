@@ -1,6 +1,8 @@
+// src/firebase/firebaseConfig.js
+
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth"; // ✅ ADD THIS
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD_n5ucBpbD7jxxFvHPHd9ZvDNdpXAnF2A",
@@ -8,7 +10,7 @@ const firebaseConfig = {
   databaseURL:
     "https://lora-d4040-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "lora-d4040",
-  storageBucket: "lora-d4040.firebasestorage.app",
+  storageBucket: "lora-d4040.appspot.com",
   messagingSenderId: "1023848167071",
   appId: "1:1023848167071:web:85b12177f59dd0dd47d4aa",
 };
@@ -16,4 +18,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const database = getDatabase(app);
-export const auth = getAuth(app); // ✅ ADD THIS
+export const auth = getAuth(app);
