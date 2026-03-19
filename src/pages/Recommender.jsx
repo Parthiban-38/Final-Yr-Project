@@ -1,182 +1,100 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
-=======
-import { Link } from "react-router-dom";
-import LogoutButton from "../components/LogoutButton";
->>>>>>> 481b934513125c867aa08ae2c6b06fb89db46cf8
 
-const cropRules = [
-  { name: "Paddy", minTemp: 20, maxTemp: 35, minMoisture: 75, minHumidity: 70, fertilizer:"Urea + DAP", irrigation:"Standing water", tips:"Flooded fields" },
-  { name: "Wheat", minTemp: 10, maxTemp: 25, minMoisture: 40, minHumidity: 40, fertilizer:"Nitrogen", irrigation:"Moderate", tips:"Cool climate" },
-  { name: "Maize", minTemp: 20, maxTemp: 35, minMoisture: 50, minHumidity: 50, fertilizer:"NPK", irrigation:"Moderate", tips:"Needs sunlight" },
-  { name: "Tomato", minTemp: 20, maxTemp: 30, minMoisture: 50, minHumidity: 50, fertilizer:"NPK", irrigation:"Drip", tips:"Use staking" },
-  { name: "Potato", minTemp: 10, maxTemp: 25, minMoisture: 40, minHumidity: 40, fertilizer:"Potassium", irrigation:"Regular", tips:"Cool climate" },
-  { name: "Cotton", minTemp: 25, maxTemp: 40, minMoisture: 35, minHumidity: 40, fertilizer:"Potassium", irrigation:"Moderate", tips:"Avoid waterlogging" }
-];
-
-<<<<<<< HEAD
-function Recommender() {
-
-  // Sensor data (auto)
-  const [temp, setTemp] = useState(0);
-  const [moisture, setMoisture] = useState(0);
-  const [humidity, setHumidity] = useState(0);
-
-  const [cropInput, setCropInput] = useState("");
-  const [result, setResult] = useState(null);
-
-  // 🔥 Simulated sensor (later Firebase / API connect pannalam)
-  useEffect(() => {
-    setTemp(28);        // sensor temp
-    setMoisture(65);    // soil moisture
-    setHumidity(60);    // humidity
-  }, []);
-
-  const handleCheck = () => {
-    const crop = cropRules.find(c =>
-      c.name.toLowerCase() === cropInput.toLowerCase()
-    );
-
-    if (!crop) {
-      setResult({ status: "notfound" });
-      return;
-    }
-
-    // Condition check
-    if (
-      temp >= crop.minTemp &&
-      temp <= crop.maxTemp &&
-      moisture >= crop.minMoisture &&
-      humidity >= crop.minHumidity
-    ) {
-      setResult({ status: "good", crop });
-    } else {
-      setResult({ status: "bad", crop });
-    }
-  };
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>🌾 Smart Crop Checker (Sensor Based)</h1>
-
-      {/* Sensor Data Display */}
-      <h3>📡 Live Sensor Data</h3>
-      <p>🌡 Temperature: {temp}°C</p>
-      <p>💧 Soil Moisture: {moisture}%</p>
-      <p>🌫 Humidity: {humidity}%</p>
-
-      <br />
-
-      {/* Crop Input */}
-      <input
-        type="text"
-        placeholder="Enter Crop Name"
-        value={cropInput}
-        onChange={(e) => setCropInput(e.target.value)}
-      />
-
-      <button onClick={handleCheck}>Check Suitability</button>
-
-      {/* Result */}
-      <div>
-        {result && result.status === "notfound" && (
-          <p>❌ Crop not found</p>
-        )}
-
-        {result && result.status === "good" && (
-          <div style={{ border: "1px solid green", padding: "10px", margin: "10px" }}>
-            <h2>✅ Suitable for {result.crop.name}</h2>
-            <p>🧪 Fertilizer: {result.crop.fertilizer}</p>
-            <p>🚿 Irrigation: {result.crop.irrigation}</p>
-            <p>💡 Tips: {result.crop.tips}</p>
-          </div>
-        )}
-
-        {result && result.status === "bad" && (
-          <div style={{ border: "1px solid red", padding: "10px", margin: "10px" }}>
-            <h2>⚠️ Not Suitable for {result.crop.name}</h2>
-            <p>Try adjusting conditions</p>
-          </div>
-=======
 export default function Recommender() {
-  const [temp, setTemp] = useState("");
-  const [moisture, setMoisture] = useState("");
-  const [results, setResults] = useState([]);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [step, setStep] = useState(1);
+  const [landType, setLandType] = useState("");
+  const [soil, setSoil] = useState("");
+  const [cropInput, setCropInput] = useState("");
+  const [result, setResult] = useState("");
 
-  // Live date/time
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // 🌡 Simulated sensor data
+  const [temp] = useState(28);
+  const [moisture] = useState(65);
+  const [humidity] = useState(60);
 
-  const handleRecommend = () => {
-    const t = Number(temp);
-    const m = Number(moisture);
-    const matched = cropRules.filter((crop) => crop.condition(t, m));
-    setResults(matched);
+  // 🌱 Soil Recommendation
+  const handleSoilRecommend = () => {
+    if (soil === "red") {
+      setResult("🌾 Suitable crops: Groundnut, Millets");
+    } else if (soil === "black") {
+      setResult("🌾 Suitable crops: Cotton, Soybean");
+    } else if (soil === "sandy") {
+      setResult("🌾 Suitable crops: Coconut, Watermelon");
+    } else if (soil === "clay") {
+      setResult("🌾 Suitable crops: Paddy, Jute");
+    }
+  };
+
+  // 🌾 Crop Check
+  const handleCropCheck = () => {
+    if (cropInput.toLowerCase() === "paddy" && moisture > 70) {
+      setResult("✅ Suitable for Paddy");
+    } else {
+      setResult("⚠️ Not Suitable / Check conditions");
+    }
   };
 
   return (
-    <div style={{ padding: "20px", minHeight: "100vh", background: "linear-gradient(135deg,#e8f5e9,#e3f2fd)" }}>
-      {/* HEADER */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap" }}>
-        <h1>🌾 Crop Recommender</h1>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-            {currentTime.toLocaleString([], { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-          </div>
-          <div style={{ marginTop: "5px", display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-            <Link to="/dashboard">
-              <button style={{ padding: "8px 14px", background: "#2196f3", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" }}>
-                ← Dashboard
-              </button>
-            </Link>
-            <LogoutButton />
-          </div>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>🌾 Smart Agriculture Assistant</h1>
+
+      {/* STEP 1 */}
+      {step === 1 && (
+        <div>
+          <h2>Select Land Status</h2>
+          <button onClick={() => { setLandType("empty"); setStep(2); }}>
+            🌱 Empty Land
+          </button>
+
+          <button onClick={() => { setLandType("sown"); setStep(2); }} style={{ marginLeft: "10px" }}>
+            🌾 Seed Sown
+          </button>
         </div>
-      </div>
+      )}
 
-      {/* INPUTS */}
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "15px" }}>
-        <input
-          type="number"
-          placeholder="Temperature"
-          value={temp}
-          onChange={(e) => setTemp(e.target.value)}
-          style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}
-        />
-        <input
-          type="number"
-          placeholder="Soil Moisture"
-          value={moisture}
-          onChange={(e) => setMoisture(e.target.value)}
-          style={{ padding: "8px", borderRadius: "6px", border: "1px solid #ccc" }}
-        />
-        <button
-          onClick={handleRecommend}
-          style={{ padding: "8px 15px", background: "#4caf50", color: "white", border: "none", borderRadius: "6px", cursor: "pointer" }}
-        >
-          Recommend
-        </button>
-      </div>
+      {/* STEP 2 - EMPTY LAND */}
+      {step === 2 && landType === "empty" && (
+        <div>
+          <h2>🌱 Select Soil Type</h2>
 
-      {/* RESULTS */}
-      <div>
-        {results.length === 0 ? (
-          <p>No crops found</p>
-        ) : (
-          results.map((crop, index) => (
-            <div key={index} style={{ border: "1px solid gray", margin: "10px 0", padding: "10px", borderRadius: "8px", background: "white", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>
-              <h2>{crop.name}</h2>
-              <p>🌱 Fertilizer: {crop.data.fertilizer}</p>
-              <p>💧 Irrigation: {crop.data.irrigation}</p>
-              <p>💡 Tips: {crop.data.tips}</p>
-            </div>
-          ))
->>>>>>> 481b934513125c867aa08ae2c6b06fb89db46cf8
-        )}
-      </div>
+          <select onChange={(e) => setSoil(e.target.value)}>
+            <option value="">Select Soil</option>
+            <option value="red">Red Soil</option>
+            <option value="black">Black Soil</option>
+            <option value="sandy">Sandy Soil</option>
+            <option value="clay">Clay Soil</option>
+          </select>
+
+          <br /><br />
+
+          <button onClick={handleSoilRecommend}>Get Recommendation</button>
+        </div>
+      )}
+
+      {/* STEP 2 - SEED SOWN */}
+      {step === 2 && landType === "sown" && (
+        <div>
+          <h2>🌾 Crop Suitability Check</h2>
+
+          <p>🌡 Temp: {temp}°C | 💧 Moisture: {moisture}% | 🌫 Humidity: {humidity}%</p>
+
+          <input
+            placeholder="Enter crop name"
+            value={cropInput}
+            onChange={(e) => setCropInput(e.target.value)}
+          />
+
+          <button onClick={handleCropCheck}>Check</button>
+        </div>
+      )}
+
+      {/* RESULT */}
+      {result && (
+        <div style={{ marginTop: "20px", padding: "15px", border: "1px solid gray" }}>
+          <h2>Result</h2>
+          <p>{result}</p>
+        </div>
+      )}
     </div>
   );
 }
