@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import Recommender from "./pages/Recommender";
-
-function App() {
-  return <Recommender />;
-=======
 import { BrowserRouter } from "react-router-dom";
 import { useEffect } from "react";
 import AppRoutes from "./routes";
@@ -13,7 +7,6 @@ function App() {
   useEffect(() => {
     const removeGoogleBanner = () => {
       const iframe = document.querySelector(".goog-te-banner-frame");
-      <Route path="/recommender" element={<Recommender />} />
       if (iframe) {
         iframe.style.display = "none";
       }
@@ -25,13 +18,12 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>   {/* ✅ IMPORTANT */}
+    <AuthProvider>
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
     </AuthProvider>
   );
->>>>>>> 481b934513125c867aa08ae2c6b06fb89db46cf8
 }
 
 export default App;
