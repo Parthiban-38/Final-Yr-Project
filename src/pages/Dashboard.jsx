@@ -6,6 +6,9 @@ import SensorChart from "../components/SensorChart";
 import useSensorData from "../hooks/useSensorData";
 import { Link } from "react-router-dom";
 import LogoutButton from "../components/LogoutButton";
+import { speakFullPage } from "../utils/speakPage";
+import { Volume2 } from "lucide-react";
+
 
 export default function Dashboard() {
   const { data, history, connected } = useSensorData();
@@ -33,6 +36,27 @@ export default function Dashboard() {
         padding: "30px",
       }}
     >
+      <div>
+
+      {/* 🔊 Speak Button */}
+      <button
+        onClick={speakFullPage}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          background: "green",
+          color: "white",
+          padding: "12px",
+          borderRadius: "50%"
+        }}
+      >
+        <Volume2 />
+      </button>
+
+      {/* Your existing dashboard content */}
+
+    </div>
       {/* HEADER */}
       <div
         style={{

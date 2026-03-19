@@ -1,4 +1,7 @@
 /* 🎨 Theme Variables */
+#app-wrapper {
+  transform: none !important;
+}
 :root {
   --blue: #2563eb;
   --gold: #facc15;
@@ -10,6 +13,10 @@ body {
   font-family: Arial, sans-serif;
   background: #f3f4f6;
   top: 0 !important; /* Prevent shift after translate */
+}
+html, body {
+  height: auto;
+  overflow-x: hidden;
 }
 
 * {
@@ -39,10 +46,15 @@ html body .goog-te-banner-frame.skiptranslate {
 
 /* 🌐 Position Translate Dropdown */
 #google_translate_element {
-  position: fixed;
+  position: fixed !important;
   top: 20px;
   right: 300px;
-  z-index: 999;
+  z-index:2147483647;;
+   transform: none !important;
+}
+.container {
+  min-height: 100vh;
+  overflow: visible; /* 🔥 important */
 }
 
 /* 🎨 Style Dropdown */

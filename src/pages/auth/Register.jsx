@@ -20,8 +20,24 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 🌐 Detect Language from Google Translate
+  const getCurrentLanguage = () => {
+    const match = document.cookie.match(/googtrans=\/ta\/(\w+)/);
+    return match ? match[1] : "ta"; // default Tamil
+  };
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // 📱 Format Phone for Twilio
+  const formatPhone = (phone) => {
+    phone = phone.replace(/\D/g, ""); // remove non-numbers
+
+    if (phone.startsWith("91")) {
+      return "+" + phone;
+    }
+    return "+91" + phone;
   };
 
   const handleRegister = async (e) => {
@@ -34,10 +50,14 @@ export default function Register() {
       return setError("Please fill all required fields");
     }
 
+    if (phone.length < 10) {
+      return setError("Enter valid phone number");
+    }
+
     try {
       setLoading(true);
 
-      // 🔐 Create user in Firebase Auth
+      // 🔐 Create user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -46,18 +66,22 @@ export default function Register() {
 
       const user = userCredential.user;
 
-      // ☁️ Save extra details in Realtime Database
+      const language = getCurrentLanguage(); // 🌐 detect language
+      const formattedPhone = formatPhone(phone); // 📱 format phone
+
+      // ☁️ Save in Firebase
       await set(ref(database, "users/" + user.uid), {
         name,
-        phone,
+        phone: formattedPhone,
         email,
         farmSize,
         cropType,
         location,
+        language, // 🔥 IMPORTANT for SMS + Voice
         createdAt: new Date().toISOString(),
       });
 
-      navigate("/dashboard"); // ✅ redirect after register
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -72,7 +96,6 @@ export default function Register() {
         <p style={styles.subtitle}>Join Smart Agri Platform</p>
 
         <form onSubmit={handleRegister} style={styles.form}>
-          {/* Personal Details */}
           <input name="name" placeholder="Full Name" onChange={handleChange} style={styles.input} />
           <input name="phone" placeholder="Phone Number" onChange={handleChange} style={styles.input} />
           <input name="email" placeholder="Email Address" onChange={handleChange} style={styles.input} />
@@ -85,7 +108,6 @@ export default function Register() {
             style={styles.input}
           />
 
-          {/* Land Details */}
           <input name="farmSize" placeholder="Farm Size (in acres)" onChange={handleChange} style={styles.input} />
           <input name="cropType" placeholder="Crop Type (e.g. Paddy, Wheat)" onChange={handleChange} style={styles.input} />
           <input name="location" placeholder="Location (Village/District)" onChange={handleChange} style={styles.input} />
@@ -107,62 +129,3 @@ export default function Register() {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "linear-gradient(135deg, #43e97b, #38f9d7)",
-  },
-  card: {
-    width: "400px",
-    padding: "30px",
-    borderRadius: "15px",
-    background: "#fff",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    textAlign: "center",
-  },
-  title: {
-    marginBottom: "5px",
-  },
-  subtitle: {
-    fontSize: "14px",
-    color: "#666",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-  },
-  input: {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-    fontSize: "14px",
-  },
-  button: {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    background: "#43e97b",
-    color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer",
-  },
-  error: {
-    color: "red",
-    fontSize: "13px",
-  },
-  footerText: {
-    marginTop: "15px",
-    fontSize: "14px",
-  },
-  link: {
-    color: "#43e97b",
-    fontWeight: "bold",
-    textDecoration: "none",
-  },
-};
