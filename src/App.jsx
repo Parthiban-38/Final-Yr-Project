@@ -1,7 +1,37 @@
+<<<<<<< HEAD
 import Recommender from "./pages/Recommender";
 
 function App() {
   return <Recommender />;
+=======
+import { BrowserRouter } from "react-router-dom";
+import { useEffect } from "react";
+import AppRoutes from "./routes";
+import { AuthProvider } from "./context/AuthContext";
+
+function App() {
+  useEffect(() => {
+    const removeGoogleBanner = () => {
+      const iframe = document.querySelector(".goog-te-banner-frame");
+      <Route path="/recommender" element={<Recommender />} />
+      if (iframe) {
+        iframe.style.display = "none";
+      }
+      document.body.style.top = "0px";
+    };
+
+    const interval = setInterval(removeGoogleBanner, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <AuthProvider>   {/* ✅ IMPORTANT */}
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+>>>>>>> 481b934513125c867aa08ae2c6b06fb89db46cf8
 }
 
 export default App;

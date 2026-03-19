@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, off } from "firebase/database";
 import { database } from "../firebase/firebaseConfig";
 
 export default function useSensorData() {
-
   const [data, setData] = useState({});
   const [history, setHistory] = useState([]);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-
-    // REALTIME DATA
+    // 🔴 REALTIME DATA
     const realtimeRef = ref(database, "farm_monitoring/realtime");
 
-    onValue(realtimeRef, (snapshot) => {
+    const realtimeCallback = onValue(realtimeRef, (snapshot) => {
       if (snapshot.exists()) {
         setData(snapshot.val());
         setConnected(true);
@@ -22,55 +20,57 @@ export default function useSensorData() {
       }
     });
 
-
-    // HISTORY DATA
+    // 🔵 HISTORY DATA
     const historyRef = ref(database, "farm_monitoring/history");
 
-    onValue(historyRef, (snapshot) => {
-
+    const historyCallback = onValue(historyRef, (snapshot) => {
       const raw = snapshot.val();
-      if (!raw) return;
+
+      if (!raw) {
+        setHistory([]);
+        return;
+      }
 
       const formatted = Object.keys(raw)
-  .map((timestamp) => {
+        .map((key) => {
+          const ts = Number(key);
+          if (isNaN(ts)) return null;
 
-    let timeValue;
+          // ✅ Convert timestamp safely
+          const dateObj = new Date(
+            key.length === 10 ? ts * 1000 : ts
+          );
 
-    if (!isNaN(timestamp) && timestamp.length >= 10) {
-      timeValue = Number(timestamp) * 1000;
-    }
-    else if (timestamp.includes("_")) {
+          return {
+            timestamp: dateObj.getTime(), // 🔥 IMPORTANT (for sorting)
+            time: dateObj.toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit", // 🔥 more accuracy
+              hour12: true,
+              timeZone: "Asia/Kolkata",
+            }),
+            fullTime: dateObj.toLocaleString("en-IN", {
+              timeZone: "Asia/Kolkata",
+            }),
+            temperature: raw[key]?.temperature ?? 0,
+            humidity: raw[key]?.humidity ?? 0,
+            soil_percentage: raw[key]?.soil_percentage ?? 0,
+            rssi: raw[key]?.rssi ?? 0,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.timestamp - b.timestamp); // ✅ PERFECT SORT
 
-      const clean = timestamp
-        .replace("_", " ")
-        .replace(/-/g, ":")
-        .replace(": ", " ");
-
-      timeValue = new Date(clean).getTime();
-    }
-    else {
-      return null;
-    }
-
-    return {
-      time: timeValue,
-      temperature: raw[timestamp].temperature,
-      humidity: raw[timestamp].humidity,
-      soil_percentage: raw[timestamp].soil_percentage,
-      rssi: raw[timestamp].rssi
-    };
-
-  })
-  .filter(Boolean);
-
-      // SORT BY TIME
-      formatted.sort((a, b) => a.time - b.time);
-
-      // KEEP LAST 24 RECORDS
-      setHistory(formatted.slice(-24));
-
+      // ✅ LAST 20 DATA POINTS (smooth chart)
+      setHistory(formatted.slice(-20));
     });
 
+    // 🧹 CLEANUP (CORRECT WAY)
+    return () => {
+      off(realtimeRef, "value", realtimeCallback);
+      off(historyRef, "value", historyCallback);
+    };
   }, []);
 
   return { data, history, connected };
