@@ -1,14 +1,20 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; // ✅ FIXED PATH
+import { AuthContext } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
 
-  // Optional safety check (prevents crash if context fails)
+  // Show loading while checking auth
   if (user === undefined) {
-    return null;
+    return <div>Loading...</div>;
   }
 
-  return user ? children : <Navigate to="/login" />;
+  // If not logged in → redirect
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If logged in → show page
+  return children;
 }

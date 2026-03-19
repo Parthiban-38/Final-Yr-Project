@@ -7,72 +7,97 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend
+  Legend,
 } from "recharts";
+import { motion } from "framer-motion";
 
 export default function SensorChart({ data }) {
-
-  if (!data || data.length === 0) {
-    return <p>No sensor history available</p>;
-  }
-
- const formattedData = data
-  .filter(item => item.time)
-  .map((item) => {
-
-    const date = new Date(Number(item.time));
-
-    if (isNaN(date.getTime())) return null;
-
-    return {
-      ...item,
-      timeLabel: date.toLocaleString()
-    };
-
-  })
-  .filter(Boolean)
-  .sort((a, b) => a.time - b.time);
-
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      style={{
+        width: "100%",
+        height: "350px",
+      }}
+    >
+      <ResponsiveContainer>
+        <LineChart data={data}>
+          {/* GRID */}
+          <CartesianGrid strokeDasharray="3 3" />
 
-    <ResponsiveContainer width="100%" height={350}>
+          {/* ✅ BETTER X AXIS (TIMESTAMP) */}
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={(t) =>
+              new Date(t).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+              })
+            }
+          />
 
-      <LineChart data={formattedData}>
+          {/* Y AXIS */}
+          <YAxis />
 
-        <CartesianGrid strokeDasharray="3 3" />
+          {/* ✅ TOOLTIP WITH FULL DATE */}
+          <Tooltip
+            labelFormatter={(value) =>
+              new Date(value).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+              })
+            }
+          />
 
-        <XAxis dataKey="timeLabel" />
+          {/* LEGEND */}
+          <Legend />
 
-        <YAxis />
+          {/* 🔥 TEMPERATURE */}
+          <Line
+            type="monotone"
+            dataKey="temperature"
+            stroke="#ff5722"
+            strokeWidth={3}
+            dot={false}
+            isAnimationActive={true}
+            animationDuration={500}
+          />
 
-        <Tooltip />
+          {/* 💧 HUMIDITY */}
+          <Line
+            type="monotone"
+            dataKey="humidity"
+            stroke="#2196f3"
+            strokeWidth={3}
+            dot={false}
+            isAnimationActive={true}
+            animationDuration={500}
+          />
 
-        <Legend />
-
-        <Line
-          type="monotone"
-          dataKey="temperature"
-          stroke="#ff7043"
-          strokeWidth={3}
-        />
-
-        <Line
-          type="monotone"
-          dataKey="humidity"
-          stroke="#42a5f5"
-          strokeWidth={3}
-        />
-
-        <Line
-          type="monotone"
-          dataKey="soil_percentage"
-          stroke="#66bb6a"
-          strokeWidth={3}
-        />
-
-      </LineChart>
-
-    </ResponsiveContainer>
-
+          {/* 🌱 SOIL */}
+          <Line
+            type="monotone"
+            dataKey="soil_percentage"
+            stroke="#4caf50"
+            strokeWidth={3}
+            dot={false}
+            isAnimationActive={true}
+            animationDuration={500}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </motion.div>
   );
 }

@@ -1,18 +1,36 @@
-import React from "react";
+// src/pages/Dashboard.jsx
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Thermometer, Droplets, Sprout, Signal } from "lucide-react";
 import SensorChart from "../components/SensorChart";
 import useSensorData from "../hooks/useSensorData";
+import { Link } from "react-router-dom";
+import LogoutButton from "../components/LogoutButton";
 
 export default function Dashboard() {
   const { data, history, connected } = useSensorData();
+
+  // ✅ Live Date & Time
+  const [currentTime, setCurrentTime] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Default sensor values
+  const temperature = data?.temperature ?? 0;
+  const humidity = data?.humidity ?? 0;
+  const soil = data?.soil_percentage ?? 0;
+  const rssi = data?.rssi ?? "--";
 
   return (
     <div
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg,#e8f5e9,#e3f2fd)",
-        padding: "30px"
+        padding: "30px",
       }}
     >
       {/* HEADER */}
@@ -21,24 +39,79 @@ export default function Dashboard() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "30px"
+          marginBottom: "30px",
+          flexWrap: "wrap",
         }}
       >
         <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>
           🌾 Smart Agriculture Dashboard
         </h1>
 
-        <div style={{ fontSize: "18px" }}>
-          Status:
-          {connected ? (
-            <span style={{ color: "green", marginLeft: "10px" }}>
-              ● Connected
-            </span>
-          ) : (
-            <span style={{ color: "red", marginLeft: "10px" }}>
-              ● Offline
-            </span>
-          )}
+        {/* DATE + TIME + STATUS + BUTTONS */}
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+            {currentTime.toLocaleString([], {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })}
+          </div>
+
+          {/* STATUS */}
+          <div style={{ marginTop: "5px" }}>
+            Status:
+            {connected ? (
+              <span style={{ color: "green", marginLeft: "8px" }}>● Connected</span>
+            ) : (
+              <span style={{ color: "red", marginLeft: "8px" }}>● Offline</span>
+            )}
+          </div>
+
+          {/* BUTTONS */}
+          <div
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              gap: "10px",
+              justifyContent: "flex-end",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link to="/recommender">
+              <button
+                style={{
+                  padding: "8px 14px",
+                  background: "#4caf50",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
+              >
+                🌱 Recommender
+              </button>
+            </Link>
+            <Link to="/history">
+              <button
+                style={{
+                  padding: "8px 14px",
+                  background: "#2196f3",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
+              >
+                📊 History
+              </button>
+            </Link>
+
+            {/* ✅ Logout Button */}
+            <LogoutButton />
+          </div>
         </div>
       </div>
 
@@ -48,37 +121,51 @@ export default function Dashboard() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
           gap: "20px",
-          marginBottom: "40px"
+          marginBottom: "40px",
         }}
       >
         <SensorCard
           icon={<Thermometer size={30} />}
           title="Temperature"
-          value={`${data?.temperature ?? 0} °C`}
+          value={`${temperature} °C`}
           color="#ff7043"
         />
-
         <SensorCard
           icon={<Droplets size={30} />}
           title="Humidity"
-          value={`${data?.humidity ?? 0} %`}
+          value={`${humidity} %`}
           color="#42a5f5"
         />
-
         <SensorCard
           icon={<Sprout size={30} />}
           title="Soil Moisture"
-          value={`${data?.soil_percentage ?? 0} %`}
+          value={`${soil} %`}
           color="#66bb6a"
         />
-
         <SensorCard
           icon={<Signal size={30} />}
           title="LoRa Signal"
-          value={`${data?.rssi ?? "--"} dBm`}
+          value={`${rssi} dBm`}
           color="#ab47bc"
         />
       </div>
+
+      {/* VIEW FULL HISTORY BUTTON */}
+      <Link to="/history">
+        <button
+          style={{
+            padding: "10px 18px",
+            background: "#2196f3",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            marginBottom: "20px",
+          }}
+        >
+          📊 View Full History
+        </button>
+      </Link>
 
       {/* CHART */}
       <div
@@ -86,17 +173,17 @@ export default function Dashboard() {
           background: "white",
           borderRadius: "12px",
           padding: "20px",
-          boxShadow: "0 8px 20px rgba(0,0,0,0.1)"
+          boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
         }}
       >
         <h2 style={{ marginBottom: "20px" }}>📊 Sensor History</h2>
-
-        <SensorChart data={history} />
+        {history && history.length > 0 ? <SensorChart data={history} /> : <p>No sensor data available</p>}
       </div>
     </div>
   );
 }
 
+/* SENSOR CARD COMPONENT */
 function SensorCard({ icon, title, value, color }) {
   return (
     <motion.div
@@ -108,7 +195,7 @@ function SensorCard({ icon, title, value, color }) {
         boxShadow: "0 8px 15px rgba(0,0,0,0.1)",
         display: "flex",
         alignItems: "center",
-        gap: "15px"
+        gap: "15px",
       }}
     >
       <div
@@ -116,12 +203,11 @@ function SensorCard({ icon, title, value, color }) {
           background: color,
           color: "white",
           padding: "12px",
-          borderRadius: "10px"
+          borderRadius: "10px",
         }}
       >
         {icon}
       </div>
-
       <div>
         <div style={{ color: "#777" }}>{title}</div>
         <div style={{ fontSize: "22px", fontWeight: "bold" }}>{value}</div>
