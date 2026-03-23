@@ -1,24 +1,22 @@
 import { getCurrentLanguage } from "./language";
 
 export function speakText(text) {
+  if (!text) {
+    console.warn("⚠️ No text to speak");
+    return;
+  }
+
   const lang = getCurrentLanguage();
 
   const speech = new SpeechSynthesisUtterance(text);
 
-  if (lang === "en") {
-    speech.lang = "en-US";
-  } else {
-    speech.lang = "ta-IN";
-  }
+  speech.lang = lang === "ta" ? "ta-IN" : "en-US";
 
-  // 🔍 DEBUG HERE
   let voices = window.speechSynthesis.getVoices();
-  console.log("Voices:", voices);
 
   if (!voices.length) {
     window.speechSynthesis.onvoiceschanged = () => {
       voices = window.speechSynthesis.getVoices();
-      console.log("Voices after load:", voices); // 🔍 important
       setVoiceAndSpeak(voices, speech);
     };
   } else {
@@ -27,12 +25,12 @@ export function speakText(text) {
 }
 
 function setVoiceAndSpeak(voices, speech) {
+  // ✅ Better matching
   const selectedVoice = voices.find(v =>
-    v.lang.toLowerCase().includes(speech.lang.toLowerCase())
+    v.lang.toLowerCase().startsWith(speech.lang.toLowerCase())
   );
 
   if (selectedVoice) {
-    console.log("Using voice:", selectedVoice);
     speech.voice = selectedVoice;
   } else {
     console.warn("⚠️ No matching voice found for", speech.lang);

@@ -73,60 +73,57 @@ export default function Login() {
 
 const styles = {
   container: {
-    height: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #4facfe, #00f2fe)",
+    height: "100vh",
+    background: "#f4f6f8", // same as register
   },
   card: {
-    width: "350px",
-    padding: "30px",
-    borderRadius: "15px",
     background: "#fff",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+    padding: "30px",
+    borderRadius: "10px",
+    width: "350px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
     textAlign: "center",
   },
   title: {
     marginBottom: "5px",
   },
   subtitle: {
-    fontSize: "14px",
-    color: "#666",
     marginBottom: "20px",
+    color: "gray",
+    fontSize: "14px",
   },
   form: {
     display: "flex",
     flexDirection: "column",
-    gap: "15px",
   },
   input: {
-    padding: "12px",
-    borderRadius: "8px",
+    marginBottom: "10px",
+    padding: "10px",
+    borderRadius: "5px",
     border: "1px solid #ccc",
-    outline: "none",
-    fontSize: "14px",
   },
   button: {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    background: "#4facfe",
+    padding: "10px",
+    background: "#4CAF50", // same green as register
     color: "#fff",
-    fontWeight: "bold",
+    border: "none",
+    borderRadius: "5px",
     cursor: "pointer",
   },
   error: {
     color: "red",
-    fontSize: "13px",
+    fontSize: "14px",
   },
   footerText: {
-    marginTop: "15px",
+    marginTop: "10px",
     fontSize: "14px",
   },
   link: {
-    color: "#4facfe",
-    fontWeight: "bold",
+    color: "#4CAF50",
     textDecoration: "none",
+    fontWeight: "bold",
   },
 };

@@ -129,3 +129,55 @@ export default function Register() {
     </div>
   );
 }
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "#f4f6f8",
+  },
+  card: {
+    background: "#fff",
+    padding: "30px",
+    borderRadius: "10px",
+    width: "350px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+  },
+  title: {
+    marginBottom: "5px",
+  },
+  subtitle: {
+    marginBottom: "20px",
+    color: "gray",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  input: {
+    marginBottom: "10px",
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+  },
+  button: {
+    padding: "10px",
+    background: "#4CAF50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  error: {
+    color: "red",
+    fontSize: "14px",
+  },
+  footerText: {
+    marginTop: "10px",
+  },
+  link: {
+    color: "#4CAF50",
+    textDecoration: "none",
+  },
+};
