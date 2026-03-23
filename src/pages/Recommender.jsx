@@ -1,9 +1,4 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
-=======
-import { speakFullPage } from "../utils/speakPage";
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
-
 const cropRules = [
   { name: "Paddy", minTemp: 20, maxTemp: 35, minMoisture: 75, minHumidity: 70, fertilizer:"Urea + DAP", irrigation:"Standing water", tips:"Flooded fields" },
   { name: "Sugarcane", minTemp: 20, maxTemp: 38, minMoisture: 70, minHumidity: 60, fertilizer:"High nitrogen", irrigation:"Frequent", tips:"Long duration" },
@@ -96,20 +91,8 @@ export default function Recommender() {
   };
 
   return (
-<<<<<<< HEAD
     <div style={{ padding: "20px" }}>
       <h1>🌾 Smart Crop Recommender</h1>
-=======
-    <div id="recommendation-page" style={{ padding: "20px" }}>
-
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-  <h1>🌾 Smart Crop Recommender</h1>
-
-  <button onClick={() => speakFullPage("recommendation-page")}>
-    🔊
-  </button>
-</div>
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
 
       {step === 1 && (
         <div>
