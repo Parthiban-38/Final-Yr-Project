@@ -1,23 +1,17 @@
-// src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Thermometer, Droplets, Sprout, Signal } from "lucide-react";
+import { Thermometer, Droplets, Sprout, Signal, Volume2 } from "lucide-react";
 import SensorChart from "../components/SensorChart";
 import useSensorData from "../hooks/useSensorData";
 import { Link } from "react-router-dom";
 import LogoutButton from "../components/LogoutButton";
-<<<<<<< HEAD
-=======
-import { speakFullPage } from "../utils/speakPage";
-import { Volume2 } from "lucide-react";
-
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
 
 export default function Dashboard() {
   const { data, history, connected } = useSensorData();
 
-  // ✅ Live Date & Time
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  // 🕒 Time update
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -25,223 +19,250 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Default sensor values
+  // 🔥 Voice load fix (IMPORTANT)
+  useEffect(() => {
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.getVoices();
+    };
+  }, []);
+
   const temperature = data?.temperature ?? 0;
   const humidity = data?.humidity ?? 0;
   const soil = data?.soil_percentage ?? 0;
   const rssi = data?.rssi ?? "--";
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg,#e8f5e9,#e3f2fd)",
-        padding: "30px",
-      }}
-    >
-<<<<<<< HEAD
-=======
-      <div>
+  // 🔊 FINAL SPEAK FUNCTION
+  const handleSpeak = () => {
+    window.speechSynthesis.cancel(); // stop all (auto voice issue fix)
 
+    const voices = window.speechSynthesis.getVoices();
+
+    const englishVoice =
+      voices.find(v => v.lang === "en-US") ||
+      voices.find(v => v.lang.includes("en")) ||
+      voices[0];
+
+    const tamilVoice = voices.find(v => v.lang.includes("ta"));
+
+    const textEN = `Temperature ${temperature} degree Celsius. Humidity ${humidity} percent. Soil moisture ${soil} percent.`;
+
+    const textTA = `வெப்பநிலை ${temperature} டிகிரி செல்சியஸ். ஈரப்பதம் ${humidity} சதவீதம். மண் ஈரப்பதம் ${soil} சதவீதம்.`;
+
+    const speechEN = new SpeechSynthesisUtterance(textEN);
+    speechEN.voice = englishVoice;
+    speechEN.rate = 0.9;
+
+    const speechTA = new SpeechSynthesisUtterance(textTA);
+    speechTA.voice = tamilVoice;
+    speechTA.rate = 0.85;
+
+    // English → Tamil chain
+    speechEN.onend = () => {
+      if (tamilVoice) {
+        window.speechSynthesis.speak(speechTA);
+      }
+    };
+
+    window.speechSynthesis.speak(speechEN);
+  };
+
+  return (
+    <div style={styles.container}>
+      
       {/* 🔊 Speak Button */}
-      <button
-        onClick={speakFullPage}
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          background: "green",
-          color: "white",
-          padding: "12px",
-          borderRadius: "50%"
-        }}
-      >
+      <button onClick={handleSpeak} style={styles.speakBtn}>
         <Volume2 />
       </button>
 
-      {/* Your existing dashboard content */}
-
-    </div>
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
       {/* HEADER */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "30px",
-          flexWrap: "wrap",
-        }}
-      >
-        <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>
-          🌾 Smart Agriculture Dashboard
-        </h1>
+      <div style={styles.header}>
+        <h1 style={styles.title}>🌾 Smart Agriculture Dashboard</h1>
 
-        {/* DATE + TIME + STATUS + BUTTONS */}
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {currentTime.toLocaleString([], {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })}
+        <div style={styles.rightBox}>
+          <div style={styles.time}>
+            {currentTime.toLocaleString()}
           </div>
 
-          {/* STATUS */}
-          <div style={{ marginTop: "5px" }}>
+          <div>
             Status:
-            {connected ? (
-              <span style={{ color: "green", marginLeft: "8px" }}>● Connected</span>
-            ) : (
-              <span style={{ color: "red", marginLeft: "8px" }}>● Offline</span>
-            )}
+            <span style={connected ? styles.connected : styles.offline}>
+              ● {connected ? "Connected" : "Offline"}
+            </span>
           </div>
 
-          {/* BUTTONS */}
-          <div
-            style={{
-              marginTop: "10px",
-              display: "flex",
-              gap: "10px",
-              justifyContent: "flex-end",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={styles.btnGroup}>
             <Link to="/recommender">
-              <button
-                style={{
-                  padding: "8px 14px",
-                  background: "#4caf50",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                }}
-              >
+              <button style={{ ...styles.btn, background: "#2d6a4f" }}>
                 🌱 Recommender
               </button>
             </Link>
+
             <Link to="/history">
-              <button
-                style={{
-                  padding: "8px 14px",
-                  background: "#2196f3",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                }}
-              >
+              <button style={{ ...styles.btn, background: "#40916c" }}>
                 📊 History
               </button>
             </Link>
 
-            {/* ✅ Logout Button */}
             <LogoutButton />
           </div>
         </div>
       </div>
 
-      {/* SENSOR CARDS */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-          gap: "20px",
-          marginBottom: "40px",
-        }}
-      >
-        <SensorCard
-          icon={<Thermometer size={30} />}
-          title="Temperature"
-          value={`${temperature} °C`}
-          color="#ff7043"
-        />
-        <SensorCard
-          icon={<Droplets size={30} />}
-          title="Humidity"
-          value={`${humidity} %`}
-          color="#42a5f5"
-        />
-        <SensorCard
-          icon={<Sprout size={30} />}
-          title="Soil Moisture"
-          value={`${soil} %`}
-          color="#66bb6a"
-        />
-        <SensorCard
-          icon={<Signal size={30} />}
-          title="LoRa Signal"
-          value={`${rssi} dBm`}
-          color="#ab47bc"
-        />
+      {/* CARDS */}
+      <div style={styles.cardContainer}>
+        <SensorCard icon={<Thermometer />} title="Temperature" value={`${temperature} °C`} color="#ff7043" />
+        <SensorCard icon={<Droplets />} title="Humidity" value={`${humidity} %`} color="#42a5f5" />
+        <SensorCard icon={<Sprout />} title="Soil Moisture" value={`${soil} %`} color="#66bb6a" />
+        <SensorCard icon={<Signal />} title="LoRa Signal" value={`${rssi} dBm`} color="#ab47bc" />
       </div>
 
-      {/* VIEW FULL HISTORY BUTTON */}
+      {/* HISTORY BUTTON */}
       <Link to="/history">
-        <button
-          style={{
-            padding: "10px 18px",
-            background: "#2196f3",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            marginBottom: "20px",
-          }}
-        >
-          📊 View Full History
-        </button>
+        <button style={styles.fullHistoryBtn}>📊 View Full History</button>
       </Link>
 
       {/* CHART */}
-      <div
-        style={{
-          background: "white",
-          borderRadius: "12px",
-          padding: "20px",
-          boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
-        }}
-      >
+      <div style={styles.chartBox}>
         <h2 style={{ marginBottom: "20px" }}>📊 Sensor History</h2>
-        {history && history.length > 0 ? <SensorChart data={history} /> : <p>No sensor data available</p>}
+        {history?.length ? (
+          <SensorChart data={history} />
+        ) : (
+          <p>No sensor data available</p>
+        )}
       </div>
     </div>
   );
 }
 
-/* SENSOR CARD COMPONENT */
+/* SENSOR CARD */
 function SensorCard({ icon, title, value, color }) {
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      style={{
-        background: "white",
-        padding: "20px",
-        borderRadius: "12px",
-        boxShadow: "0 8px 15px rgba(0,0,0,0.1)",
-        display: "flex",
-        alignItems: "center",
-        gap: "15px",
-      }}
-    >
-      <div
-        style={{
-          background: color,
-          color: "white",
-          padding: "12px",
-          borderRadius: "10px",
-        }}
-      >
-        {icon}
-      </div>
+    <motion.div whileHover={{ scale: 1.05 }} style={styles.card}>
+      <div style={{ ...styles.iconBox, background: color }}>{icon}</div>
       <div>
-        <div style={{ color: "#777" }}>{title}</div>
-        <div style={{ fontSize: "22px", fontWeight: "bold" }}>{value}</div>
+        <div style={styles.cardTitle}>{title}</div>
+        <div style={styles.cardValue}>{value}</div>
       </div>
     </motion.div>
   );
 }
+
+/* STYLES */
+const styles = {
+  container: {
+    minHeight: "100vh",
+    padding: "25px",
+    background: "linear-gradient(135deg,#d4fc79,#96e6a1)",
+    fontFamily: "Segoe UI",
+  },
+
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    marginBottom: "30px",
+  },
+
+  title: {
+    fontSize: "30px",
+    fontWeight: "bold",
+  },
+
+  rightBox: {
+    textAlign: "right",
+  },
+
+  time: {
+    fontWeight: "bold",
+    marginBottom: "5px",
+  },
+
+  connected: {
+    color: "green",
+    marginLeft: "8px",
+  },
+
+  offline: {
+    color: "red",
+    marginLeft: "8px",
+  },
+
+  btnGroup: {
+    marginTop: "10px",
+    display: "flex",
+    gap: "10px",
+    justifyContent: "flex-end",
+    flexWrap: "wrap",
+  },
+
+  btn: {
+    padding: "8px 14px",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+  },
+
+  cardContainer: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+    gap: "20px",
+    marginBottom: "30px",
+  },
+
+  card: {
+    background: "rgba(255,255,255,0.7)",
+    backdropFilter: "blur(10px)",
+    padding: "20px",
+    borderRadius: "15px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+    display: "flex",
+    alignItems: "center",
+    gap: "15px",
+  },
+
+  iconBox: {
+    color: "#fff",
+    padding: "12px",
+    borderRadius: "10px",
+  },
+
+  cardTitle: {
+    color: "#555",
+  },
+
+  cardValue: {
+    fontSize: "22px",
+    fontWeight: "bold",
+  },
+
+  fullHistoryBtn: {
+    padding: "10px 18px",
+    background: "#2d6a4f",
+    color: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginBottom: "20px",
+  },
+
+  chartBox: {
+    background: "rgba(255,255,255,0.8)",
+    padding: "20px",
+    borderRadius: "15px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+  },
+
+  speakBtn: {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    background: "#2d6a4f",
+    color: "white",
+    padding: "14px",
+    borderRadius: "50%",
+    border: "none",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+  },
+};

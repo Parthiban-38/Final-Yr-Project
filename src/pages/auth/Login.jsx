@@ -22,7 +22,7 @@ export default function Login() {
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/dashboard"); // ✅ redirect after login
+      navigate("/dashboard");
     } catch (err) {
       setError("Invalid email or password");
     } finally {
@@ -73,12 +73,11 @@ export default function Login() {
 
 const styles = {
   container: {
-<<<<<<< HEAD
-    height: "100vh",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #4facfe, #00f2fe)",
+    background: "linear-gradient(135deg, #43e97b, #38f9d7)", // match register
   },
   card: {
     width: "350px",
@@ -86,76 +85,38 @@ const styles = {
     borderRadius: "15px",
     background: "#fff",
     boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-=======
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    background: "#f4f6f8", // same as register
-  },
-  card: {
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "10px",
-    width: "350px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
     textAlign: "center",
   },
   title: {
     marginBottom: "5px",
   },
   subtitle: {
-<<<<<<< HEAD
     fontSize: "14px",
     color: "#666",
     marginBottom: "20px",
-=======
-    marginBottom: "20px",
-    color: "gray",
-    fontSize: "14px",
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
   },
   form: {
     display: "flex",
     flexDirection: "column",
-<<<<<<< HEAD
-    gap: "15px",
+    gap: "12px",
   },
   input: {
     padding: "12px",
     borderRadius: "8px",
     border: "1px solid #ccc",
-    outline: "none",
     fontSize: "14px",
   },
   button: {
     padding: "12px",
     borderRadius: "8px",
     border: "none",
-    background: "#4facfe",
+    background: "#43e97b",
     color: "#fff",
     fontWeight: "bold",
-=======
-  },
-  input: {
-    marginBottom: "10px",
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    padding: "10px",
-    background: "#4CAF50", // same green as register
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
     cursor: "pointer",
   },
   error: {
     color: "red",
-<<<<<<< HEAD
     fontSize: "13px",
   },
   footerText: {
@@ -163,20 +124,8 @@ const styles = {
     fontSize: "14px",
   },
   link: {
-    color: "#4facfe",
+    color: "#43e97b",
     fontWeight: "bold",
     textDecoration: "none",
-=======
-    fontSize: "14px",
-  },
-  footerText: {
-    marginTop: "10px",
-    fontSize: "14px",
-  },
-  link: {
-    color: "#4CAF50",
-    textDecoration: "none",
-    fontWeight: "bold",
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
   },
 };

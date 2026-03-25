@@ -6,7 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Agri Dashboard</title>
 
-    <!-- ✅ Set default language (English) using cookie -->
+    <!-- 🔥 FIXED POSITION STYLE -->
+    <style>
+      #google_translate_element {
+        position: fixed;
+        top: 10px;
+        right: 20px;
+        z-index: 9999;
+        background: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      }
+
+      .goog-te-gadget {
+        font-size: 0 !important;
+      }
+
+      .goog-te-combo {
+        font-size: 14px !important;
+        padding: 5px;
+        border-radius: 5px;
+      }
+    </style>
+
+    <!-- ✅ Set default language -->
     <script>
       (function () {
         var lang = (document.cookie.match(/(^|;\s*)googtrans=\/en\/(\w+)/) || [])[2];
@@ -21,7 +45,7 @@
   </head>
 
   <body>
-    <!-- 🌐 Translate Dropdown -->
+    <!-- 🌐 Translate Dropdown (Fixed position) -->
     <div id="google_translate_element"></div>
 
     <!-- ✅ Google Translate Init -->
@@ -29,8 +53,8 @@
       function googleTranslateElementInit() {
         new google.translate.TranslateElement(
           {
-            pageLanguage: "en", // default English
-            includedLanguages: "en,ta", // English + Tamil
+            pageLanguage: "en",
+            includedLanguages: "en,ta",
             layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
           },
           "google_translate_element"
@@ -82,7 +106,7 @@
       });
     </script>
 
-    <!-- 🔥 Force remove Google top bar -->
+    <!-- 🔥 Remove Google top bar -->
     <script>
       function removeTranslateBar() {
         const bar = document.querySelector(".goog-te-banner-frame");
@@ -93,12 +117,10 @@
     </script>
 
     <!-- ⚛️ React App -->
-<<<<<<< HEAD
-=======
-     <div id="app-wrapper">
->>>>>>> c22219921c0f8fba5b77b71ecc17596a145a6eac
-    <div id="root"></div>
-     </div>
+    <div id="app-wrapper">
+      <div id="root"></div>
+    </div>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
